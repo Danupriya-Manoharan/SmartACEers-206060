@@ -1,7 +1,0 @@
-RUNTIME.LOCATION = /mgmt/etc/esb/ifs/x0r/
-FLOW.DESCRIPTION = X0RSaisec Subscriber flow
-FLOW.MODE = SUBSCRIBE
-INPUT.QUEUE = ESB.X0R.SAISEC.SUB.UBB.Q01
-OUTPUT.FILE = Paris_SAISEC_0501_Full_&ex1_P\.xml
-OUTPUT.DIR = /mgmt/data/esb/ifs/saisec/sub/x0r/ubb/
-ERROR.TRESHOLD=0

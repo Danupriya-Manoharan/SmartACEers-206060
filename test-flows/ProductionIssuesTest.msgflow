@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ComIbmCompute.msgnode="ComIbmCompute.msgnode" xmlns:ComIbmDatabase.msgnode="ComIbmDatabase.msgnode" xmlns:ComIbmHTTPRequest.msgnode="ComIbmHTTPRequest.msgnode" xmlns:ComIbmMQGet.msgnode="ComIbmMQGet.msgnode" xmlns:ComIbmMQInput.msgnode="ComIbmMQInput.msgnode" xmlns:ComIbmMQOutput.msgnode="ComIbmMQOutput.msgnode" xmlns:ComIbmRoute.msgnode="ComIbmRoute.msgnode" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:eflow="http://www.ibm.com/wbi/2005/eflow" xmlns:utility="http://www.ibm.com/wbi/2005/eflow_utility" nsURI="ProductionIssuesTest.msgflow" nsPrefix="ProductionIssuesTest.msgflow">
+  <eClassifiers xmi:type="eflow:FCMComposite" name="FCMComposite_1" nodeLayoutStyle="RECTANGLE">
+    <eSuperTypes href="http://www.ibm.com/wbi/2005/eflow#//FCMBlock"/>
+    <translation xmi:type="utility:TranslatableString" key="ProductionIssuesTest" bundleName="ProductionIssuesTest" pluginId="TestFlows"/>
+    <colorGraphic16 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/TestFlows/icons/full/obj16/ProductionIssuesTest.gif"/>
+    <colorGraphic32 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/TestFlows/icons/full/obj30/ProductionIssuesTest.gif"/>
+    <composition>
+      <!-- ISSUE 1: MQ Input with Transaction Mode = No (Critical) -->
+      <nodes xmi:type="ComIbmMQInput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_1" location="50,100" queueName="INPUT.QUEUE" transactionMode="no">
+        <translation xmi:type="utility:ConstantString" string="MQ Input No Transaction"/>
+      </nodes>
+      
+      <!-- ISSUE 2: No Catch Terminal Connected (Critical Error Handling Issue) -->
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_2" location="250,100" computeExpression="esql://routine/#ProcessMessage.Main">
+        <translation xmi:type="utility:ConstantString" string="Compute No Error Handler"/>
+      </nodes>
+      
+      <!-- ISSUE 3: Database node without proper transaction coordination -->
+      <nodes xmi:type="ComIbmDatabase.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_3" location="450,100" dataSource="MYDB" statement="SELECT * FROM CUSTOMERS">
+        <translation xmi:type="utility:ConstantString" string="Database Query"/>
+      </nodes>
+      
+      <!-- ISSUE 4: HTTP Request without timeout -->
+      <nodes xmi:type="ComIbmHTTPRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_4" location="650,100" protocol="TLS" requestTimeout="0">
+        <translation xmi:type="utility:ConstantString" string="HTTP Request No Timeout"/>
+      </nodes>
+      
+      <!-- ISSUE 5: MQ Output without transaction coordination -->
+      <nodes xmi:type="ComIbmMQOutput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_5" location="850,100" queueName="OUTPUT.QUEUE" transactionMode="no">
+        <translation xmi:type="utility:ConstantString" string="MQ Output No Transaction"/>
+      </nodes>
+      
+      <!-- ISSUE 6: MQ Get without backout queue -->
+      <nodes xmi:type="ComIbmMQGet.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_6" location="50,250" queueName="PROCESS.QUEUE" backoutDestination="">
+        <translation xmi:type="utility:ConstantString" string="MQ Get No Backout"/>
+      </nodes>
+      
+      <!-- ISSUE 7: Route node without default route -->
+      <nodes xmi:type="ComIbmRoute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_7" location="250,250">
+        <translation xmi:type="utility:ConstantString" string="Route No Default"/>
+      </nodes>
+      
+      <!-- ISSUE 8: Compute with hardcoded credentials (Security Issue) -->
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_8" location="450,250" computeExpression="esql://routine/#HardcodedCreds.Main">
+        <translation xmi:type="utility:ConstantString" string="Compute Hardcoded Creds"/>
+        <shortDescription xmi:type="utility:ConstantString" string="Contains hardcoded credentials"/>
+        <longDescription xmi:type="utility:ConstantString" string="SET OutputRoot.HTTPRequestHeader.Authorization = 'Basic dXNlcjpwYXNzd29yZA==';"/>
+      </nodes>
+      
+      <!-- ISSUE 9: Database without connection pooling configuration -->
+      <nodes xmi:type="ComIbmDatabase.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_9" location="650,250" dataSource="PRODDB" statement="INSERT INTO ORDERS VALUES (?, ?, ?)">
+        <translation xmi:type="utility:ConstantString" string="Database No Pool Config"/>
+      </nodes>
+      
+      <!-- ISSUE 10: HTTP Request using HTTP instead of HTTPS (Security) -->
+      <nodes xmi:type="ComIbmHTTPRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_10" location="850,250" protocol="HTTP" requestTimeout="30">
+        <translation xmi:type="utility:ConstantString" string="HTTP Not HTTPS"/>
+      </nodes>
+      
+      <!-- ISSUE 11: Compute with complex logic (Performance Issue) -->
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_11" location="50,400" computeExpression="esql://routine/#ComplexLoop.Main">
+        <translation xmi:type="utility:ConstantString" string="Compute Complex Loop"/>
+        <shortDescription xmi:type="utility:ConstantString" string="Complex nested loops"/>
+        <longDescription xmi:type="utility:ConstantString" string="Contains nested loops with XPath queries - performance issue"/>
+      </nodes>
+      
+      <!-- ISSUE 12: MQ Input with no backout threshold -->
+      <nodes xmi:type="ComIbmMQInput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_12" location="250,400" queueName="RETRY.QUEUE" transactionMode="yes" backoutThreshold="0">
+        <translation xmi:type="utility:ConstantString" string="MQ Input No Backout Threshold"/>
+      </nodes>
+      
+      <!-- ISSUE 13: Database with SELECT * (Performance) -->
+      <nodes xmi:type="ComIbmDatabase.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_13" location="450,400" dataSource="MYDB" statement="SELECT * FROM LARGE_TABLE">
+        <translation xmi:type="utility:ConstantString" string="Database SELECT ALL"/>
+      </nodes>
+      
+      <!-- ISSUE 14: Compute with no null checks -->
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_14" location="650,400" computeExpression="esql://routine/#NoNullCheck.Main">
+        <translation xmi:type="utility:ConstantString" string="Compute No Null Check"/>
+        <shortDescription xmi:type="utility:ConstantString" string="Missing null validation"/>
+      </nodes>
+      
+      <!-- ISSUE 15: MQ Output with hardcoded queue name -->
+      <nodes xmi:type="ComIbmMQOutput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_15" location="850,400" queueName="DEV.OUTPUT.QUEUE">
+        <translation xmi:type="utility:ConstantString" string="MQ Output Hardcoded Queue"/>
+      </nodes>
+      
+      <!-- ISSUE 16: HTTP Request without error handling -->
+      <nodes xmi:type="ComIbmHTTPRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_16" location="50,550" protocol="HTTPS" requestTimeout="60">
+        <translation xmi:type="utility:ConstantString" string="HTTP No Error Handling"/>
+      </nodes>
+      
+      <!-- ISSUE 17: Database without timeout -->
+      <nodes xmi:type="ComIbmDatabase.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_17" location="250,550" dataSource="SLOWDB" statement="SELECT * FROM HUGE_TABLE WHERE complex_condition = ?">
+        <translation xmi:type="utility:ConstantString" string="Database No Timeout"/>
+      </nodes>
+      
+      <!-- ISSUE 18: Compute with sensitive data logging -->
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_18" location="450,550" computeExpression="esql://routine/#LogSensitiveData.Main">
+        <translation xmi:type="utility:ConstantString" string="Compute Logs Sensitive Data"/>
+        <shortDescription xmi:type="utility:ConstantString" string="Logs credit card numbers"/>
+      </nodes>
+      
+      <!-- ISSUE 19: MQ Get with infinite wait -->
+      <nodes xmi:type="ComIbmMQGet.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_19" location="650,550" queueName="WAIT.QUEUE" waitInterval="-1">
+        <translation xmi:type="utility:ConstantString" string="MQ Get Infinite Wait"/>
+      </nodes>
+      
+      <!-- ISSUE 20: HTTP Request with SSL validation disabled -->
+      <nodes xmi:type="ComIbmHTTPRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_20" location="850,550" protocol="HTTPS" validateTiming="never">
+        <translation xmi:type="utility:ConstantString" string="HTTP SSL Validation Disabled"/>
+      </nodes>
+      
+      <!-- Connections showing flow paths -->
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_1" targetNode="FCMComposite_1_2" sourceNode="FCMComposite_1_1" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_2" targetNode="FCMComposite_1_3" sourceNode="FCMComposite_1_2" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_3" targetNode="FCMComposite_1_4" sourceNode="FCMComposite_1_3" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_4" targetNode="FCMComposite_1_5" sourceNode="FCMComposite_1_4" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_5" targetNode="FCMComposite_1_7" sourceNode="FCMComposite_1_6" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_6" targetNode="FCMComposite_1_8" sourceNode="FCMComposite_1_7" sourceTerminalName="OutTerminal.match" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_7" targetNode="FCMComposite_1_9" sourceNode="FCMComposite_1_8" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_8" targetNode="FCMComposite_1_10" sourceNode="FCMComposite_1_9" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_9" targetNode="FCMComposite_1_12" sourceNode="FCMComposite_1_11" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_10" targetNode="FCMComposite_1_13" sourceNode="FCMComposite_1_12" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_11" targetNode="FCMComposite_1_14" sourceNode="FCMComposite_1_13" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_12" targetNode="FCMComposite_1_15" sourceNode="FCMComposite_1_14" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_13" targetNode="FCMComposite_1_17" sourceNode="FCMComposite_1_16" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_14" targetNode="FCMComposite_1_18" sourceNode="FCMComposite_1_17" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_15" targetNode="FCMComposite_1_19" sourceNode="FCMComposite_1_18" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      <connections xmi:type="eflow:FCMConnection" xmi:id="FCMConnection_16" targetNode="FCMComposite_1_20" sourceNode="FCMComposite_1_19" sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+      
+      <!-- Note: Catch terminal from FCMComposite_1_1 is intentionally NOT connected to demonstrate error handling issue -->
+    </composition>
+    <propertyOrganizer/>
+    <stickyBoard/>
+  </eClassifiers>
+</ecore:EPackage>

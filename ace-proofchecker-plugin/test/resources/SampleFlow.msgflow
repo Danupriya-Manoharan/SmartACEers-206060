@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Representative ACE message flow used to exercise the validators end-to-end:
+
+      MQInput  ->  Compute  ->  MQOutput
+                      \
+                       (HTTPRequest is present but its catch/failure
+                        terminals are intentionally left unconnected)
+
+  Attribute names here match what the validators inspect (transactionMode,
+  queueName, url, timeout, ...) so the fixture deliberately triggers findings.
+  Connections use the real ACE attribute scheme: sourceNode/targetNode and
+  sourceTerminalName/targetTerminalName with qualified terminal names such as
+  "OutTerminal.out".
+-->
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:eflow="http://www.ibm.com/wbi/2005/eflow"
+    xmlns:ComIbmMQInput.msgnode="ComIbmMQInput.msgnode"
+    xmlns:ComIbmCompute.msgnode="ComIbmCompute.msgnode"
+    xmlns:ComIbmMQOutput.msgnode="ComIbmMQOutput.msgnode"
+    xmlns:ComIbmHTTPRequest.msgnode="ComIbmHTTPRequest.msgnode"
+    name="SampleFlow">
+  <eClassifiers xmi:type="eflow:FCMComposite" name="FCMComposite_1">
+    <composition>
+
+      <!-- MQ Input: transaction mode disabled -> MQTransactionValidator (CRITICAL) -->
+      <nodes xmi:type="ComIbmMQInput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_1"
+             name="ReadOrderRequest" queueName="IN.ORDER.QUEUE" transactionMode="no"/>
+
+      <!-- Compute: catch terminal exists but is left unconnected -> CatchTerminalValidator (CRITICAL) -->
+      <nodes xmi:type="ComIbmCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_2"
+             name="TransformOrder"/>
+
+      <!-- MQ Output -->
+      <nodes xmi:type="ComIbmMQOutput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_3"
+             name="WriteOrderResponse" queueName="OUT.ORDER.QUEUE"/>
+
+      <!-- HTTP Request: unencrypted URL, no timeout, unconnected catch/failure -> Security + HTTPRest findings -->
+      <nodes xmi:type="ComIbmHTTPRequest.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_4"
+             name="EnrichViaService" url="http://api.example.com/enrich"/>
+
+      <!-- MQInput.out -> Compute.in -->
+      <connections xmi:type="eflow:FCMConnection" xmi:id="conn_1"
+                   sourceNode="FCMComposite_1_1" targetNode="FCMComposite_1_2"
+                   sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+
+      <!-- Compute.out -> MQOutput.in -->
+      <connections xmi:type="eflow:FCMConnection" xmi:id="conn_2"
+                   sourceNode="FCMComposite_1_2" targetNode="FCMComposite_1_3"
+                   sourceTerminalName="OutTerminal.out" targetTerminalName="InTerminal.in"/>
+
+    </composition>
+  </eClassifiers>
+</ecore:EPackage>

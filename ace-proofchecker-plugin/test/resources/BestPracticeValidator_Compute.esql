@@ -1,0 +1,22 @@
+-- Sample ESQL module used to exercise BestPracticesValidator rule
+-- "best.practices.nested.if". It has 5 nested IF conditions (depth 5 >= 4),
+-- so running Proofcheck on a flow whose Compute node resolves to this module
+-- should raise a HIGH "deeply nested IF conditions" finding.
+
+CREATE COMPUTE MODULE BestPracticeValidator_Compute
+    CREATE FUNCTION Main() RETURNS BOOLEAN
+    BEGIN
+        IF InputRoot.XMLNSC.Order.Type = 'A' THEN
+            IF InputRoot.XMLNSC.Order.Region = 'EU' THEN
+                IF InputRoot.XMLNSC.Order.Priority = 'High' THEN
+                    IF InputRoot.XMLNSC.Order.Amount > 1000 THEN
+                        IF InputRoot.XMLNSC.Order.Currency = 'USD' THEN
+                            SET OutputRoot.XMLNSC.Order.Status = 'ESCALATE';
+                        END IF;
+                    END IF;
+                END IF;
+            END IF;
+        END IF;
+        RETURN TRUE;
+    END;
+END MODULE;

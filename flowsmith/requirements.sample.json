@@ -1,9 +1,0 @@
-{
-  "_comment": "FlowSmith input. Either set 'pattern' explicitly, or give a free-text 'requirement' and FlowSmith auto-selects from the map.",
-  "requirement": "consume messages from an MQ queue and write them to files, batched",
-  "pattern": null,
-  "subsys": "XAJ",
-  "app": "TLMTF",
-  "func": "FINANCING",
-  "ndm": "REFPGN"
-}

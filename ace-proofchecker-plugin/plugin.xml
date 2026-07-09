@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <!-- Extension point for commands -->
+   <extension point="org.eclipse.ui.commands">
+      <command
+            id="com.smartaceers.proofchecker.runProofcheck"
+            name="Run Proofcheck"
+            description="Validates ACE message flow for common production issues">
+      </command>
+   </extension>
+   
+   <!-- Extension point for command handlers -->
+   <extension point="org.eclipse.ui.handlers">
+      <handler
+            commandId="com.smartaceers.proofchecker.runProofcheck"
+            class="com.smartaceers.proofchecker.handlers.ProofcheckHandler">
+      </handler>
+   </extension>
+   
+   <!-- Extension point for menu contributions -->
+   <extension point="org.eclipse.ui.menus">
+      <!-- Context menu contribution -->
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="com.smartaceers.proofchecker.runProofcheck"
+               label="Run Proofcheck"
+               style="push"
+               tooltip="Validate this message flow for production issues">
+            <visibleWhen checkEnabled="false">
+               <with variable="selection">
+                  <iterate ifEmpty="false">
+                     <adapt type="org.eclipse.core.resources.IFile">
+                        <test property="org.eclipse.core.resources.extension"
+                              value="msgflow">
+                        </test>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      
+      <!-- Main menu contribution -->
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="com.smartaceers.proofchecker.menu"
+               label="ACE Proofcheck">
+            <command
+                  commandId="com.smartaceers.proofchecker.runProofcheck"
+                  label="Run Proofcheck"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   
+   <!-- Extension point for problem markers -->
+   <extension
+         id="com.smartaceers.proofchecker.problem"
+         name="ACE Proofcheck Problem"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <persistent value="true"/>
+      <attribute name="ruleId"/>
+      <attribute name="category"/>
+      <attribute name="nodeName"/>
+      <attribute name="nodeType"/>
+      <attribute name="suggestion"/>
+   </extension>
+   
+   <!-- Extension point for marker resolution (quick fixes) - Future enhancement -->
+   <!--
+   <extension point="org.eclipse.ui.ide.markerResolution">
+      <markerResolutionGenerator
+            class="com.smartaceers.proofchecker.quickfix.ProofcheckMarkerResolutionGenerator"
+            markerType="com.smartaceers.proofchecker.problem">
+      </markerResolutionGenerator>
+   </extension>
+   -->
+   
+</plugin>
+
+<!-- Made with Bob -->
